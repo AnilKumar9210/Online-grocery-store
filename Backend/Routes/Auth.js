@@ -1,11 +1,11 @@
-import { Router } from "express";
+import express from "express";
 import bcrypt from "bcryptjs";
 import User from "../Schema/user.js";
 import jwt from "jsonwebtoken"
 
-const authRoute = Router ();
+const authRoute = express.Router ();
 
-authRoute.get ("/register", async (req, res) => {
+authRoute.post ("/register", async (req, res) => {
     const {email, password} = req.body;
 
     try {
@@ -17,7 +17,6 @@ authRoute.get ("/register", async (req, res) => {
         }
 
         const newUser = new User ({
-            userName,
             email,
             password: hashedPass,
         })
@@ -38,18 +37,23 @@ authRoute.post ("/login", async (req, res) => {
     try {
         const user = await User.findOne ({email:email});
         if (!user) {
-            res.status (400).json ({message: "User not found"});
+            return res.status (400).json ({message: "User not found"});
         }
 
         const isMatch = await bcrypt.compare (password,user.password);
 
         if (!isMatch) {
-            res.status (400).json ({message: "Invalid password"});
+            return res.status (400).json ({message: "Invalid password"});
         }
 
         const token = jwt.sign ({userId:user._id,}, process.env.JWT_SECRET, {expiresIn:"1d"});
 
-        res.status (200).json ({message: "Login successful", token,user});
+        res.status (200).json ({message: "Login successful",
+      token,
+      user:{
+        id: user._id,
+        email: user.email,
+      },});
     } catch (error) {
         res.status (500).json ({message: "Internal Server Error"});
     }

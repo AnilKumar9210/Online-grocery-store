@@ -9,6 +9,8 @@ const AppProvider = ({ children }) => {
 
     const [isLogin,setIsLogin]=useState(!!localStorage.getItem("token"));
 
+    const api = "https://localhost:5000";
+
 
   return (
   <AppContext.Provider 
@@ -16,7 +18,8 @@ const AppProvider = ({ children }) => {
         userDetails,
         setUserDetails,
         isLogin,
-        setIsLogin
+        setIsLogin,
+        api
         }}>
     {children}
     </AppContext.Provider>

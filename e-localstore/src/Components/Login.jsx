@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import logo from "../assets/logo.png";
 import password from "../assets/padlock.png";
 import mail from "../assets/mail.png";
@@ -7,6 +7,7 @@ import hide from "../assets/hidden.png";
 import "./Login.css";
 import Button from "../Utils/Button";
 import { motion } from "framer-motion";
+import { AppContext } from "../Context/context";
 
 const Login = () => {
   const [toggleHide, setToggleHide] = useState(false);
@@ -15,29 +16,61 @@ const Login = () => {
   const [forget, setForget] = useState(true);
   const [sent, setSent] = useState(true);
 
-  const [authDetails,setAuthDetails] = useState ({
-    password:"",
-    email:""
+  const [authDetails, setAuthDetails] = useState({
+    password: "",
+    email: "",
+    confirmPassword: "",
   });
 
-  const handleAuthChange = (e)=> {
-    setAuthDetails ({...authDetails,[e.target.name]:e.target.value})
-    console.log(e.target.value)
-  }
+  const { api } = useContext(AppContext);
 
-
+  const handleAuthChange = (e) => {
+    setAuthDetails({ ...authDetails, [e.target.name]: e.target.value });
+    console.log(e.target.value);
+  };
 
   const handleLog = () => {
     setSent(false);
     console.log(authDetails);
   };
-  const handleLogs = () => {
+
+  const handleSignIn = async () => {
     console.log(authDetails);
+    if (authDetails.password.length < 6) {
+      alert("Password must be at least 6 characters long");
+      return;
+    }
+    if (authDetails.password !== authDetails.confirmPassword) {
+      alert("Passwords do not match");
+      return;
+    }
+    if (!/\S+@\S+\.\S+/.test(authDetails.email)) {
+      alert("Please enter a valid email address");
+      return;
+    }
+
+    try {
+      await fetch(`${api}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: authDetails.email,
+          password: authDetails.password,
+        }),
+      });
+    } catch (error) {
+      console.log("Error during registration:", error);
+    }
   };
   return (
-    <motion.div className="auth-main" animate={{ opacity: 1 }}
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}>
+    <motion.div
+      className="auth-main"
+      animate={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <motion.div
         className="auth"
         animate={{ opacity: 1 }}
@@ -58,14 +91,26 @@ const Login = () => {
               <label className="auth-lable">Enter your email</label>
               <div id="input-data">
                 <img id="input-logo" src={mail} alt="" />
-                <input type="email" name="email" value={authDetails.email} onChange={handleAuthChange} required autoFocus />
+                <input
+                  type="email"
+                  name="email"
+                  value={authDetails.email}
+                  onChange={handleAuthChange}
+                  required
+                  autoFocus
+                />
               </div>
             </div>
             <div className="auth-input">
               <label className="auth-lable">Enter your password</label>
               <div id="input-data">
                 <img id="input-logo" src={password} alt="" />
-                <input type={toggleHide ? "text" : "password"} onChange={handleAuthChange} name="password" required />
+                <input
+                  type={toggleHide ? "text" : "password"}
+                  onChange={handleAuthChange}
+                  name="password"
+                  required
+                />
                 <img
                   src={toggleHide ? hide : show}
                   alt=""
@@ -84,7 +129,12 @@ const Login = () => {
                 <label className="auth-lable">Confirm your password</label>
                 <div id="input-data">
                   <img id="input-logo" src={password} alt="" />
-                  <input type={toggleHide ? "text" : "password"} onChange={handleAuthChange} name="password" required />
+                  <input
+                    type={toggleHide ? "text" : "password"}
+                    onChange={handleAuthChange}
+                    name="confirmedPassword"
+                    required
+                  />
                   <img
                     src={toggleHide ? hide : show}
                     alt=""
@@ -95,7 +145,7 @@ const Login = () => {
               </motion.div>
             )}
             {signIn ? (
-              <Button text={"Sign in"} handleFun={handleLogs} />
+              <Button text={"Sign in"} handleFun={handleSignIn} />
             ) : (
               <Button text={"continue"} handleFun={handleLog} />
             )}
@@ -150,7 +200,13 @@ const Login = () => {
               <label className="auth-lable">Enter your email</label>
               <div id="input-data">
                 <img id="input-logo" src={mail} alt="" />
-                <input type="email" onChange={handleAuthChange} name="email" required autoFocus />
+                <input
+                  type="email"
+                  onChange={handleAuthChange}
+                  name="email"
+                  required
+                  autoFocus
+                />
               </div>
             </motion.div>
             <motion.div
@@ -162,7 +218,12 @@ const Login = () => {
               <label className="auth-lable">Enter your OTP</label>
               <div id="input-data">
                 {/* <img id="input-logo" src={password} alt="" /> */}
-                <input type={toggleHide ? "text" : "password"} onChange={handleAuthChange} name="password" required />
+                <input
+                  type={toggleHide ? "text" : "password"}
+                  onChange={handleAuthChange}
+                  name="password"
+                  required
+                />
               </div>
             </motion.div>
             <motion.div
@@ -174,7 +235,12 @@ const Login = () => {
               <label className="auth-lable">Confirm your password</label>
               <div id="input-data">
                 <img id="input-logo" src={password} alt="" />
-                <input type={toggleHide ? "text" : "password"} onChange={handleAuthChange} name="password" required />
+                <input
+                  type={toggleHide ? "text" : "password"}
+                  onChange={handleAuthChange}
+                  name="password"
+                  required
+                />
                 <img
                   src={toggleHide ? hide : show}
                   alt=""
@@ -183,31 +249,38 @@ const Login = () => {
                 />
               </div>
             </motion.div>
-            {sent ?<motion.button whileHover={{
-                    scale:1.01,
-                    backgroundColor: "#cf4e1a"
-                }} 
-                whileTap={{scale:0.95}} 
+            {sent ? (
+              <motion.button
+                whileHover={{
+                  scale: 1.01,
+                  backgroundColor: "#cf4e1a",
+                }}
+                whileTap={{ scale: 0.95 }}
                 onClick={handleLog}
                 transition={{
-                        type:"tween", 
-                        stiffness:300
-                        }
-                    } className='button'>
-                    send OTP
-                </motion.button> :<motion.button whileHover={{
-                        scale:1.01,
-                        backgroundColor: "#cf4e1a"
-                    }} 
-                    
-                    whileTap={{scale:0.95}} 
-                    transition={{
-                            type:"tween", 
-                            stiffness:300
-                            }
-                        } className='button'>
-                        Update password
-                    </motion.button>}
+                  type: "tween",
+                  stiffness: 300,
+                }}
+                className="button"
+              >
+                send OTP
+              </motion.button>
+            ) : (
+              <motion.button
+                whileHover={{
+                  scale: 1.01,
+                  backgroundColor: "#cf4e1a",
+                }}
+                whileTap={{ scale: 0.95 }}
+                transition={{
+                  type: "tween",
+                  stiffness: 300,
+                }}
+                className="button"
+              >
+                Update password
+              </motion.button>
+            )}
           </div>
         )}
         <div className="line"></div>
