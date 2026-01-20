@@ -5,18 +5,18 @@ export const AppContext = createContext();
 
 const AppProvider = ({ children }) => {
 
-    const [userDetails,setUserDetails]=useState();
+    const [userId,setUserId]=useState();
 
     const [isLogin,setIsLogin]=useState(!!localStorage.getItem("token"));
 
-    const api = "https://localhost:5000";
+    const [api,setApi] = useState("http://localhost:5000");
 
 
   return (
   <AppContext.Provider 
   value={{
-        userDetails,
-        setUserDetails,
+        userId,
+        setUserId,
         isLogin,
         setIsLogin,
         api

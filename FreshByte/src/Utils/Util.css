@@ -1,0 +1,23 @@
+.util-button {
+ position: relative;
+    overflow: hidden;
+    padding: 8px;
+    border-radius: 4px;
+    border: 2px solid #16a34a;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.util-button .fill {
+  position: absolute;
+  inset: 0;
+  transform-origin: left;
+  z-index: 0;
+}
+
+.util-button .text {
+  position: relative;
+  z-index: 1;
+}

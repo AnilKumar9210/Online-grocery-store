@@ -8,8 +8,13 @@ import "./Login.css";
 import Button from "../Utils/Button";
 import { motion } from "framer-motion";
 import { AppContext } from "../Context/context";
+import { useNavigate } from "react-router-dom";
+
 
 const Login = () => {
+
+  const navigate = useNavigate();
+  
   const [toggleHide, setToggleHide] = useState(false);
   const [signIn, setSignIn] = useState(false);
   const [login, setLogin] = useState(false);
@@ -20,9 +25,10 @@ const Login = () => {
     password: "",
     email: "",
     confirmPassword: "",
+    otp:""
   });
 
-  const { api } = useContext(AppContext);
+  const { api,setUserId } = useContext(AppContext);
 
   const handleAuthChange = (e) => {
     setAuthDetails({ ...authDetails, [e.target.name]: e.target.value });
@@ -34,7 +40,8 @@ const Login = () => {
     console.log(authDetails);
   };
 
-  const handleSignIn = async () => {
+  const handleSignIn = async (e) => {
+        e?.preventDefault();
     console.log(authDetails);
     if (authDetails.password.length < 6) {
       alert("Password must be at least 6 characters long");
@@ -50,7 +57,29 @@ const Login = () => {
     }
 
     try {
-      await fetch(`${api}/auth/register`, {
+      const response = await fetch(`${api}/auth/register`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          email: authDetails.email,
+          password: authDetails.password,
+        })
+      });
+      const data = await response.json();
+      console.log("Registration successful:", data);
+      alert("Registration successful! Please log in.");
+    } catch (error) {
+      console.log("Error during registration:", error);
+    }
+  };
+
+  const handleLogin = async (e)=> {
+    e?.preventDefault();
+    console.log(authDetails);
+    try {
+      const res = await fetch (`${api}/auth/login`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,10 +89,18 @@ const Login = () => {
           password: authDetails.password,
         }),
       });
+      const data = await res.json();
+      console.log("Login successful:", data);
+      localStorage.setItem("token", data.token);
+      setUserId (data.userId);
+      alert("Login successful!");
+      navigate ("/");
     } catch (error) {
-      console.log("Error during registration:", error);
+      console.log("Error during login:", error);  
     }
-  };
+  }
+
+
   return (
     <motion.div
       className="auth-main"
@@ -132,7 +169,7 @@ const Login = () => {
                   <input
                     type={toggleHide ? "text" : "password"}
                     onChange={handleAuthChange}
-                    name="confirmedPassword"
+                    name="confirmPassword"
                     required
                   />
                   <img
@@ -147,7 +184,7 @@ const Login = () => {
             {signIn ? (
               <Button text={"Sign in"} handleFun={handleSignIn} />
             ) : (
-              <Button text={"continue"} handleFun={handleLog} />
+              <Button text={"continue"} handleFun={handleLogin} />
             )}
             <div className="line"></div>
             <div className="more">
@@ -221,7 +258,8 @@ const Login = () => {
                 <input
                   type={toggleHide ? "text" : "password"}
                   onChange={handleAuthChange}
-                  name="password"
+                  name="otp"
+                  inputMode='numeric'
                   required
                 />
               </div>

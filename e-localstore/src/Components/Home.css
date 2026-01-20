@@ -106,6 +106,10 @@
     padding: 0 15px;
 }
 
+.category {
+    overflow: hidden;
+}
+
 .view {
     display: block;
     color: green;
@@ -114,7 +118,7 @@
     border-radius: 15px;
     font-size: 13px;
     cursor: pointer;
-    width: 70px;
+    width:75px;
 }
 
 .view:hover {
@@ -137,13 +141,23 @@
 }
 
 .category-item img {
-    width: 120px;
+    width: 115px;
     height: 120px;
     object-fit: cover;
 }
 
 .category-list {
     display: flex;
-    padding: 15px;
+    padding: 0 15px;
+    gap: 60px;
+    overflow-x: scroll;
 }
 
+.category-list::-webkit-scrollbar{
+    width: 0;
+}
+
+.flex {
+    display: flex;
+    gap: 10px;
+}

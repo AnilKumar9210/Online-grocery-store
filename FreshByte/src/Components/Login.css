@@ -1,0 +1,173 @@
+.login {
+    width: 100%;
+    
+    background-color: var(--bg);
+    z-index: -1;
+    height: 100vh;
+    position: fixed;
+    overflow: hidden;
+}
+
+.login::before {
+    inset: 0;
+    background: url('/src//assets/background.jpg');
+    filter: blur(80px);
+    content: "";
+  position: absolute;
+  transform: scale(1.1);
+}
+
+.background::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 40%;
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  mask-image: linear-gradient(to top, black, transparent);
+}
+
+
+/* .login-container {
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+} */
+
+header {
+    display: flex;
+   justify-content: space-between;
+   align-items: center;
+   padding: 10px;
+   position: relative;
+   /* width: 100%; */
+}
+
+.logo-title {
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 24px;
+    color: #333;
+    margin-left: 10px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+.login-container {
+        position: absolute;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* justify-content: center; */
+    margin: 10px;
+    /* border: 2px solid #333 ; */
+    background: #a4a2a2;
+    border-radius: 10px;
+    /* height: 80vh; */
+    padding: 10px;
+    gap: 10px;
+    color: #333;
+}
+
+.login-container h3 {
+    margin: 10px 0;
+    color: black;
+    letter-spacing: 1px;
+}
+
+.login-container span {
+        font-size: 14px;
+    color: black;
+}
+
+.authenticate {
+    display: flex;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.authenticate span {
+    font-size: 18px;
+    font-weight: 600;
+    cursor: pointer;
+    position: relative;
+    padding-bottom: 4px;
+    color: #333;
+}
+
+.hide {
+    opacity: 0;
+}
+.login-box {
+    width: 100%;
+    margin: auto;
+    height: 80%;
+    align-items: center;
+    display: flex;
+    justify-content: center;
+}
+
+.logo {
+    width: 50px;
+    height: 50px;
+}   
+
+.logo-title h3 {
+    margin: 0;
+}
+
+header span {
+    color: #333;
+}
+
+header span:hover {
+    color: green;
+    cursor: pointer;
+}
+
+.remember {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 4px;
+}
+
+.input {
+        display: flex;
+    flex-direction: column;
+    width: 100%;
+    padding: 4px;
+    gap: 10px;
+    border-bottom: 1px solid #333;
+}
+
+.input input {
+        outline: none;
+    border: none;
+    height: 30px;
+    border-radius: 10px;
+    background-color: transparent;
+}
+
+.continue {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+
+}
+
+label {
+    font-size: 14px;
+}
+
+.active {
+    display: block;
+    width: 100%;
+    height: 1px;
+    background-color: #16a34a;
+    cursor: pointer;
+    border-radius: 10px;
+}
